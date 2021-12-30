@@ -10,6 +10,7 @@
 # conn.execute("ALTER TABLE google_scholar_organic_results ADD COLUMN snippet text")
 
 import sqlite3
+import pandas as pd
 from google_scholar_organic_results import organic_results
 from google_scholar_cite_results import cite_results
 
@@ -39,6 +40,16 @@ conn = sqlite3.connect("google_scholar_results.db")
 #             organic_results_link text,
 #             citation_title text,
 #             citation_link text)""")
+
+pd.DataFrame(organic_results()).to_sql(name="google_scholar_organic_results",
+                                       con=conn,
+                                       if_exists="append",
+                                       index=False)
+
+pd.DataFrame(cite_results()).to_sql(name="google_scholar_cite_results",
+                                    con=conn,
+                                    if_exists="append",
+                                    index=False)
 
 
 # for item in organic_results():
