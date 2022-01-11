@@ -9,11 +9,11 @@ def organic_results():
     params = {
         "api_key": os.getenv("API_KEY"),
         "engine": "google_scholar",
-        "q": "biology minecraft education xenophobia",  # search query
-        "hl": "en",  # language
+        "q": "minecraft redstone system structure characteristics strength",  # search query
+        "hl": "en",        # language
         "as_ylo": "2017",  # from 2017
         "as_yhi": "2021",  # to 2021
-        "start": "0"
+        "start": "0"       # first page
     }
 
     search = GoogleSearch(params)
@@ -32,18 +32,9 @@ def organic_results():
             title = result["title"]
             publication_info_summary = result["publication_info"]["summary"]
             result_id = result["result_id"]
-
-            try:
-                link = result["link"]
-            except: link = None
-
-            try:
-                result_type = result["type"]
-            except: result_type = None
-
-            try:
-                snippet = result["snippet"]
-            except: snippet = None
+            link = result.get("link")
+            result_type = result.get("type")
+            snippet = result.get("snippet")
 
             try:
                 file_title = result["resources"][0]["title"]
@@ -61,30 +52,20 @@ def organic_results():
                 cited_by_count = int(result["inline_links"]["cited_by"]["total"])
             except: cited_by_count = None
 
-            try:
-                cited_by_id = result["inline_links"]["cited_by"]["cites_id"]
-            except: cited_by_id = None
-
-            try:
-                cited_by_link = result["inline_links"]["cited_by"]["link"]
-            except: cited_by_link = None
+            cited_by_id = result.get("inline_links", {}).get("cited_by", {}).get("cites_id", {})
+            cited_by_link = result.get("inline_links", {}).get("cited_by", {}).get("link", {})
 
             try:
                 total_versions = int(result["inline_links"]["versions"]["total"])
             except: total_versions = None
 
-            try:
-                all_versions_link = result["inline_links"]["versions"]["link"]
-            except: all_versions_link = None
-
-            try:
-                all_versions_id = result["inline_links"]["versions"]["cluster_id"]
-            except: all_versions_id = None
+            all_versions_link = result.get("inline_links", {}).get("versions", {}).get("link", {})
+            all_versions_id = result.get("inline_links", {}).get("versions", {}).get("cluster_id", {})
 
             organic_results_data.append({
-                "page_number": results['serpapi_pagination']['current'],
+                "page_number": results["serpapi_pagination"]["current"],
                 "position": position + 1,
-                "type": result_type,
+                "result_type": result_type,
                 "title": title,
                 "link": link,
                 "result_id": result_id,
