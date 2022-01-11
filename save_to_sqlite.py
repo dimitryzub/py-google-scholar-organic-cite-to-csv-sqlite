@@ -3,7 +3,7 @@
 # https://stackoverflow.com/questions/8442147/how-to-delete-or-add-column-in-sqlite/66399224#66399224
 # https://www.sqlite.org/datatype3.html
 
-# Commands:
+# Other useful commands:
 # conn.execute("DELETE FROM google_scholar_organic_results")
 # conn.execute("DROP TABLE google_scholar_organic_results")
 # conn.execute("ALTER TABLE google_scholar_organic_results DROP COLUMN authors")
@@ -16,6 +16,18 @@ from google_scholar_cite_results import cite_results
 
 conn = sqlite3.connect("google_scholar_results.db")
 
+# Save to SQLite using Pandas
+pd.DataFrame(organic_results()).to_sql(name="google_scholar_organic_results",
+                                       con=conn,
+                                       if_exists="append",
+                                       index=False)
+
+pd.DataFrame(cite_results()).to_sql(name="google_scholar_cite_results",
+                                    con=conn,
+                                    if_exists="append",
+                                    index=False)
+
+# Save to database using SQLite
 # conn.execute("""CREATE TABLE google_scholar_organic_results (
 #                 page_number integer,
 #                 position integer,
@@ -40,16 +52,6 @@ conn = sqlite3.connect("google_scholar_results.db")
 #             organic_results_link text,
 #             citation_title text,
 #             citation_link text)""")
-
-pd.DataFrame(organic_results()).to_sql(name="google_scholar_organic_results",
-                                       con=conn,
-                                       if_exists="append",
-                                       index=False)
-
-pd.DataFrame(cite_results()).to_sql(name="google_scholar_cite_results",
-                                    con=conn,
-                                    if_exists="append",
-                                    index=False)
 
 
 # for item in organic_results():
